@@ -1,3 +1,6 @@
 /venv
+/input/*
+/output/*
+
 !input/
 !output/
