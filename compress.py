@@ -157,20 +157,22 @@ def detect_fundamental_with_limited_fft(audio, sr, low_freq=80, high_freq=400):
     peak_index = np.argmax(spectrum)
     return [freqs[peak_index]] if len(freqs) > 0 else []
 
-# Define input/output folders
-current_directory = os.path.dirname(os.path.realpath(__file__))
-input_folder = os.path.join(current_directory, 'input')
-output_folder = os.path.join(current_directory, 'output')
-os.makedirs(output_folder, exist_ok=True)
 
-# Process files
-plugin = DynamicEQPlugin()
-for file_name in os.listdir(input_folder):
-    if file_name.endswith(('.wav', '.mp3')):
-        input_file = os.path.join(input_folder, file_name)
-        output_file = os.path.join(output_folder, file_name)
-        audio, sr = plugin.load_audio(input_file)
-        fundamentals = detect_fundamental_with_limited_fft(audio[0], sr)  # Detect fundamentals for the first channel
-        processed_audio = plugin.process_audio(audio, fundamentals, include_fundamentals=True)
-        plugin.save_audio(processed_audio, output_file)
-        print(f"Processed: {input_file} -> {output_file}")
+if __name__ == "__main__":
+    # Define input/output folders
+    current_directory = os.path.dirname(os.path.realpath(__file__))
+    input_folder = os.path.join(current_directory, 'input')
+    output_folder = os.path.join(current_directory, 'output')
+    os.makedirs(output_folder, exist_ok=True)
+    
+    # Process files
+    plugin = DynamicEQPlugin()
+    for file_name in os.listdir(input_folder):
+        if file_name.endswith(('.wav', '.mp3')):
+            input_file = os.path.join(input_folder, file_name)
+            output_file = os.path.join(output_folder, file_name)
+            audio, sr = plugin.load_audio(input_file)
+            fundamentals = detect_fundamental_with_limited_fft(audio[0], sr)  # Detect fundamentals for the first channel
+            processed_audio = plugin.process_audio(audio, fundamentals, include_fundamentals=True)
+            plugin.save_audio(processed_audio, output_file)
+            print(f"Processed: {input_file} -> {output_file}")
